@@ -8,10 +8,12 @@ the website
 3. npm i ejs
 4. npm i mongoose
 
+
 5. require all
 6. connect mongoose db server
 7. start creating model 
     i. Listing -> place
         a.title b. description c. image d.price e.location f.country
-
-
+8. npm i path
+9. npm i method-override
+10.npm install ejs-mate --save                     -> use for style
