@@ -17,3 +17,4 @@ the website
 8. npm i path
 9. npm i method-override
 10.npm install ejs-mate --save                     -> use for style
+11.npm i joi           -> use for schema validation

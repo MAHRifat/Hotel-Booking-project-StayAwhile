@@ -9,6 +9,7 @@ const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
+const {listingSchema} = require("./schema.js");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -59,18 +60,27 @@ app.get("/listings",wrapAsync(async (req,res)=>{
 
 // create new route
 
+    // validation function
+    const validateListing = (req, res, next)=>{
+        let result = listingSchema.validate(req.body);
+        if(result.error){
+            let erMsg = result.error.details.map((el)=> el.message).join(",");
+            throw new ExpressError(400, erMsg);
+        }else{
+            next();
+        }
+    }
+
 app.get("/listings/new", (req, res)=> {
     res.render("listings/createForm.ejs");
 });
 
-app.post("/listings",wrapAsync( async (req, res,next)=> {
-        // const {title} = req.body;
-    if(!req.body.listing){
-        throw new ExpressError(400,"Send valid data for listing");
-    }
-    // console.log(req.body.listing);
+app.post("/listings", validateListing , wrapAsync( async (req, res,next)=> {
     const newListing = new Listing(req.body.listing);
-    // console.log(newListing);
+    // schema validation -> but this is not the effecient way  -> so we use joi api 
+    // if(!newListing.title){
+    //     throw new ExpressError(400,"Title missing");
+    // }
     await newListing.save();
     res.redirect("/listings");
     
@@ -95,7 +105,7 @@ app.get("/listings/:id/edit",wrapAsync(async (req,res)=> {
 }));
 
 // update route
-app.put("/listings/:id", wrapAsync(async (req, res) => {
+app.put("/listings/:id",validateListing, wrapAsync(async (req, res) => {
     if(!req.body.listing){
         throw new ExpressError(400,"Send valid data for listing");
     }
@@ -132,6 +142,9 @@ app.use((err, req, res, next)=> {
     // res.status(statusCode).send(message);
     res.status(statusCode).render("error.ejs",{err});
 });
+
+
+// validations for schema -> we use joi api
 
     
 app.listen(8000, ()=> {
