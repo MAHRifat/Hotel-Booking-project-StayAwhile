@@ -7,10 +7,19 @@
             <div class="mb-3">
                 <label for="title" class="form-label">Title</label>
                 <input type="text" id="title" placeholder="Add a catchy title" name="listing[title]" class="form-control" required>
+                <div class="valid-feedback">
+                    Title looks good!
+                </div>
+                <div class="invalid-feedback">
+                    Please enter the title!
+                </div>
             </div>
             <div class="mb-3">
                 <label for="description" class="form-label">Description</label>
                 <textarea id="description" placeholder="" name="listing[description]" class="form-control" required></textarea>
+                <div class="invalid-feedback">
+                    Please enter a short description!
+                </div>
             </div>
             <div class="mb-3">
                 <label for="image" class="form-label">Image</label>
@@ -20,16 +29,25 @@
                 <div class="mb-3 col-md-4">
                     <label for="price" class="form-label">Price per night</label>
                     <input type="number" id="price" placeholder="2000" name="listing[price]" class="form-control" required>
+                    <div class="invalid-feedback">
+                        Please enter the price!
+                    </div>
                 </div>
                 <div class="mb-3 col-md-8">
                     <label for="country" class="form-label">Country</label>
                     <input type="text" id="country" placeholder="Bangladesh" name="listing[country]" class="form-control" required>
+                    <div class="invalid-feedback">
+                        Please enter the valid country!
+                    </div>
                 </div>
             </div>
             
             <div class="mb-3">
                 <label for="location" class="form-label">Location</label>
                 <input type="text" id="location" placeholder="Kotbari, Comilla" name="listing[location]" class="form-control" required>
+                <div class="invalid-feedback">
+                    Please enter the valid location!
+                </div>
             </div>
             
             <button class="btn btn-dark edit-add-btn mt-3 mb-3">Add</button>
