@@ -91,7 +91,7 @@ app.post("/listings", validateListing , wrapAsync( async (req, res,next)=> {
 
 app.get("/listings/:id",wrapAsync(async (req, res)=> {
     const {id} = req.params;
-    const listing =await Listing.findById(id);
+    const listing =await Listing.findById(id).populate("reviews");
     res.render("listings/show.ejs", {listing});
 }));
 
@@ -127,16 +127,17 @@ app.delete("/listings/:id",wrapAsync(async (req, res)=> {
 
 // Review model 
 
-    // validation function
-    const validateReview = (req, res, next)=>{
-        let result = reviewSchema.validate(req.body);
-        if(result.error){
-            let erMsg = result.error.details.map((el)=> el.message).join(",");
-            throw new ExpressError(400, erMsg);
-        }else{
-            next();
+     // validation function for review
+        const validateReview = (req, res, next)=>{
+            let result = reviewSchema.validate(req.body);
+            if(result.error){
+                let erMsg = result.error.details.map((el)=> el.message).join(",");
+                throw new ExpressError(400, erMsg);
+            }else{
+                next();
+            }
         }
-    }
+
     // review form
     app.post("/listings/:id/reviews",validateReview, wrapAsync(async (req , res)=>{
         const {id} = req.params;
@@ -148,7 +149,7 @@ app.delete("/listings/:id",wrapAsync(async (req, res)=> {
         await listing.save();
         console.log("data saved");
         // res.send("saved");
-        res.redirect(`/listings/${id}`, {newReview});
+        res.redirect(`/listings/${id}`);
     }));
 
 
