@@ -152,6 +152,19 @@ app.delete("/listings/:id",wrapAsync(async (req, res)=> {
         res.redirect(`/listings/${id}`);
     }));
 
+    // delete review
+        // Mongo $pull operator
+            // the $pull operator removes from an existing arry all instances of a value
+            // or values that match a specified condition.
+
+    app.delete("/listings/:id/reviews/:reviewId", wrapAsync(async(req, res)=>{
+        let {id, reviewId} = req.params;
+        await Listing.findByIdAndUpdate(id, {$pull: {reviews: reviewId}});
+        await Review.findByIdAndDelete(reviewId);
+
+        res.redirect(`/listings/${id}`);
+    }));
+
 
 
 // form validations
