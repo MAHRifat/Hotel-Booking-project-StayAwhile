@@ -9,7 +9,8 @@ const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
-const {listingSchema} = require("./schema.js");
+const {listingSchema,reviewSchema} = require("./schema.js");
+const Review = require("./models/review.js");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -124,6 +125,33 @@ app.delete("/listings/:id",wrapAsync(async (req, res)=> {
 }));
 
 
+// Review model 
+
+    // validation function
+    const validateReview = (req, res, next)=>{
+        let result = reviewSchema.validate(req.body);
+        if(result.error){
+            let erMsg = result.error.details.map((el)=> el.message).join(",");
+            throw new ExpressError(400, erMsg);
+        }else{
+            next();
+        }
+    }
+    // review form
+    app.post("/listings/:id/reviews",validateReview, wrapAsync(async (req , res)=>{
+        const {id} = req.params;
+        let listing = await Listing.findById(id);
+        const newReview = new Review(req.body.review);
+        listing.reviews.push(newReview);
+
+        await newReview.save();
+        await listing.save();
+        console.log("data saved");
+        // res.send("saved");
+        res.redirect(`/listings/${id}`, {newReview});
+    }));
+
+
 
 // form validations
     /* When we enter data in the form, the browser
@@ -145,6 +173,9 @@ app.use((err, req, res, next)=> {
 
 
 // validations for schema -> we use joi api
+
+
+
 
     
 app.listen(8000, ()=> {
