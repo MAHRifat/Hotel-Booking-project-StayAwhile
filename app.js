@@ -6,6 +6,8 @@ const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const ExpressError = require("./utils/ExpressError.js");
+const session = require("express-session");
+const flash = require("connect-flash");
 
 const listings = require("./routes/listings.js");
 const review = require("./routes/review.js");
@@ -17,6 +19,19 @@ app.use(methodOverride("_method"));
 app.engine('ejs', ejsMate);
 app.use(express.static(path.join(__dirname,"/public")));
 
+
+const sessionOptions = {
+    secret: "mysupersecretcode",
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 3,    //  expire now to 3 days
+        maxAge: 1000 * 60 * 60 * 24 * 3,
+        httpOnly: true
+    },
+};
+
+app.use(session(sessionOptions));
 
 
 app.get("/", (req, res)=> {
@@ -61,9 +76,6 @@ app.use((err, req, res, next)=> {
 // validations for schema -> we use joi api
 
 
-
-
-    
 app.listen(8000, ()=> {
     console.log("server is listening to port 8000");
 });
