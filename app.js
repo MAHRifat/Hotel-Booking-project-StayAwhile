@@ -12,6 +12,8 @@ const ExpressError = require("./utils/ExpressError.js");
 const {listingSchema,reviewSchema} = require("./schema.js");
 const Review = require("./models/review.js");
 
+const listings = require("./routes/listings.js");
+
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({extended: true}));
@@ -53,76 +55,13 @@ main().then(()=> {
 //     res.send("successful");
 // });
 
-// index route
-app.get("/listings",wrapAsync(async (req,res)=>{
-    const allListings = await Listing.find({});
-    res.render("listings/index.ejs", {allListings});
-}));
-
-// create new route
-
-    // validation function
-    const validateListing = (req, res, next)=>{
-        let result = listingSchema.validate(req.body);
-        if(result.error){
-            let erMsg = result.error.details.map((el)=> el.message).join(",");
-            throw new ExpressError(400, erMsg);
-        }else{
-            next();
-        }
-    }
-
-app.get("/listings/new", (req, res)=> {
-    res.render("listings/createForm.ejs");
-});
-
-app.post("/listings", validateListing , wrapAsync( async (req, res,next)=> {
-    const newListing = new Listing(req.body.listing);
-    // schema validation -> but this is not the effecient way  -> so we use joi api 
-    // if(!newListing.title){
-    //     throw new ExpressError(400,"Title missing");
-    // }
-    await newListing.save();
-    res.redirect("/listings");
-    
-}));
-
-// show route
-
-app.get("/listings/:id",wrapAsync(async (req, res)=> {
-    const {id} = req.params;
-    const listing =await Listing.findById(id).populate("reviews");
-    res.render("listings/show.ejs", {listing});
-}));
 
 
-// edit route
- 
-app.get("/listings/:id/edit",wrapAsync(async (req,res)=> {
-    const {id} = req.params;
-    const listing =await Listing.findById(id);
-    console.log(listing);
-    res.render("listings/edit.ejs", {listing});
-}));
-
-// update route
-app.put("/listings/:id",validateListing, wrapAsync(async (req, res) => {
-    if(!req.body.listing){
-        throw new ExpressError(400,"Send valid data for listing");
-    }
-    const {id} = req.params;
-   await Listing.findByIdAndUpdate(id, {...req.body.listing});
-   res.redirect(`/listings/${id}`);
-}));
 
 
-// delete route
+app.use("/listings", listings);
 
-app.delete("/listings/:id",wrapAsync(async (req, res)=> {
-    const {id} = req.params;
-    await Listing.findByIdAndDelete(id);
-    res.redirect("/listings");
-}));
+
 
 
 // Review model 
