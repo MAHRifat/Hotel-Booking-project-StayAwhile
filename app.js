@@ -2,17 +2,13 @@ const express = require("express");
 const app = express();
 
 const mongoose = require("mongoose");
-const Listing = require("./models/listing.js");
 const path = require("path");
-const exp = require("constants");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
-const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
-const {listingSchema,reviewSchema} = require("./schema.js");
-const Review = require("./models/review.js");
 
 const listings = require("./routes/listings.js");
+const review = require("./routes/review.js");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -38,72 +34,9 @@ main().then(()=> {
     console.log(err);
 });
 
-// app.get("/listing",(req, res)=> {
-//     let sampleListing = new Listing({
-//         title: "My Sea",
-//         description: "My beach",
-//         price: 343,
-//         location: "Cox's Bazar",
-//         country: "Bangalesh",
-//     });
-
-//     sampleListing.save().then(listing => {
-//         console.log("Listing save", listing);
-//     }).catch(err => console.log(err));
-
-//     console.log("sample was saved");
-//     res.send("successful");
-// });
-
-
-
-
 
 app.use("/listings", listings);
-
-
-
-
-// Review model 
-
-     // validation function for review
-        const validateReview = (req, res, next)=>{
-            let result = reviewSchema.validate(req.body);
-            if(result.error){
-                let erMsg = result.error.details.map((el)=> el.message).join(",");
-                throw new ExpressError(400, erMsg);
-            }else{
-                next();
-            }
-        }
-
-    // review form
-    app.post("/listings/:id/reviews",validateReview, wrapAsync(async (req , res)=>{
-        const {id} = req.params;
-        let listing = await Listing.findById(id);
-        const newReview = new Review(req.body.review);
-        listing.reviews.push(newReview);
-
-        await newReview.save();
-        await listing.save();
-        console.log("data saved");
-        // res.send("saved");
-        res.redirect(`/listings/${id}`);
-    }));
-
-    // delete review
-        // Mongo $pull operator
-            // the $pull operator removes from an existing arry all instances of a value
-            // or values that match a specified condition.
-
-    app.delete("/listings/:id/reviews/:reviewId", wrapAsync(async(req, res)=>{
-        let {id, reviewId} = req.params;
-        await Listing.findByIdAndUpdate(id, {$pull: {reviews: reviewId}});
-        await Review.findByIdAndDelete(reviewId);
-
-        res.redirect(`/listings/${id}`);
-    }));
-
+app.use("/listings", review);
 
 
 // form validations
