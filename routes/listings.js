@@ -33,6 +33,10 @@ router.get("/new", (req, res)=> {
 router.get("/:id",wrapAsync(async (req, res)=> {
     const {id} = req.params;
     const listing =await Listing.findById(id).populate("reviews");
+    if(!listing){
+        req.flash("danger", "The listing you trying to visit not exist");
+        res.redirect("/listings");
+    }
     res.render("listings/show.ejs", {listing});
 }));
 
@@ -60,6 +64,10 @@ router.get("/:id/edit",wrapAsync(async (req,res)=> {
     const {id} = req.params;
     const listing =await Listing.findById(id);
     console.log(listing);
+    if(!listing){
+        req.flash("danger", "The listing you trying to edit not exist");
+        res.redirect("/listings");
+    }
     res.render("listings/edit.ejs", {listing});
 }));
 
