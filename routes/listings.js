@@ -45,6 +45,7 @@ router.post("/", validateListing , wrapAsync( async (req, res,next)=> {
     // if(!newListing.title){
     //     throw new ExpressError(400,"Title missing");
     // }
+    req.flash("success", "New listing created");
     await newListing.save();
     res.redirect("/listings");
     

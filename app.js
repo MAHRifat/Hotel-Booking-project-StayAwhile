@@ -31,11 +31,17 @@ const sessionOptions = {
     },
 };
 
-app.use(session(sessionOptions));
-
-
 app.get("/", (req, res)=> {
     res.send("Root direactory");
+});
+
+
+app.use(session(sessionOptions));
+app.use(flash());
+
+app.use((req, res, next)=>{
+    res.locals.success = req.flash("success");
+    next();
 });
 
 async function main() {
