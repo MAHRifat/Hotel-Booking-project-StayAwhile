@@ -8,6 +8,9 @@ const ejsMate = require("ejs-mate");
 const ExpressError = require("./utils/ExpressError.js");
 const session = require("express-session");
 const flash = require("connect-flash");
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+const User = require("./models/user.js");
 
 const listings = require("./routes/listings.js");
 const review = require("./routes/review.js");
@@ -38,12 +41,28 @@ app.get("/", (req, res)=> {
 
 app.use(session(sessionOptions));
 app.use(flash());
+                                    // to use passport we must use sesssion, initialize and sessionoptions
+app.use(passport.initialize());    // a middleware that initializes passport
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next)=>{
     res.locals.success = req.flash("success");
     res.locals.warning = req.flash("warning");
     res.locals.danger = req.flash("danger");
     next();
+});
+
+app.get("/demouser",async (req, res)=>{
+    let fackUser = new User({
+        email: "fuck@gmail.com",
+        username: "fuck",
+    });
+
+    let newUser = await User.register(fackUser, "fucku");
+    res.send(newUser);
 });
 
 async function main() {

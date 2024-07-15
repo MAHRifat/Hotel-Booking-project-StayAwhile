@@ -20,3 +20,9 @@ the website
 11.npm i joi           -> use for schema validation
 12. npm i express-session
 13. npm i connect-flash
+14. Authantication
+    i. npm i passport
+    ii. npm i passport-local    -> use to authanticate using username and password
+    iii. npm i passport-local-mongoose      -> if we use mongodb as database use this package
+    
+
