@@ -12,8 +12,9 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
 
-const listings = require("./routes/listings.js");
-const review = require("./routes/review.js");
+const listingRouter = require("./routes/listings.js");
+const reviewRouter = require("./routes/review.js");
+const userRouter = require("./routes/user.js");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -40,18 +41,19 @@ app.get("/", (req, res)=> {
 
 
 app.use(session(sessionOptions));
-app.use(flash());
-                                    // to use passport we must use sesssion, initialize and sessionoptions
+// to use passport we must use sesssion, initialize and sessionoptions
 app.use(passport.initialize());    // a middleware that initializes passport
 app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+app.use(flash());
 app.use((req, res, next)=>{
     res.locals.success = req.flash("success");
     res.locals.warning = req.flash("warning");
     res.locals.danger = req.flash("danger");
+    res.locals.error = req.flash("error");
     next();
 });
 
@@ -77,8 +79,10 @@ main().then(()=> {
 });
 
 
-app.use("/listings", listings);
-app.use("/listings", review);
+app.use("/listings", listingRouter);
+app.use("/listings", reviewRouter);
+app.use("/",userRouter);
+
 
 
 // form validations

@@ -24,6 +24,12 @@ router.get("/",wrapAsync(async (req,res)=>{
 
 // new route
 router.get("/new", (req, res)=> {
+    // console.log(req.session);
+    // console.log("User Authenticated:", req.isAuthenticated());
+    if(!req.isAuthenticated()){
+        req.flash("danger", "you must be sign in to create listing");
+        return res.redirect("/signin");
+    }
     res.render("listings/createForm.ejs");
 });
 
