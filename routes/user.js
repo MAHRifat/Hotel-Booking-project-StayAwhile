@@ -14,12 +14,20 @@ router.get("/signup",(req, res)=>{
 // create user
 router.post("/signup", wrapAsync( async (req, res,next)=> {
     try{
-        let {username, email, password} = req.body.signup;
+        let {username, email, password} = req.body;
         const newUser = new User({email, username});
         const nUser = await User.register(newUser, password);
-        req.flash("success", "Welcome to StayAwhile!");
-        console.log(nUser);
-        res.redirect("/listings");
+       
+        // login after signup automatically
+       
+        req.login(nUser, (err) => {
+            if(err) {
+                next(err);
+            }
+        
+            req.flash("success","Welcome to StayAwhile");
+            res.redirect("/listings");
+        });
     }catch(err){
         req.flash("warning", err.message);
         res.redirect("/signup");
