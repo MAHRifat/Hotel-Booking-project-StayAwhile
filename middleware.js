@@ -1,6 +1,6 @@
 module.exports.isLoggedIn = (req, res, next) =>{
     if(!req.isAuthenticated()){
-        req.flash("danger", "you must be sign in to create listing");
+        req.flash("danger", "you must be sign in");
         return res.redirect("/signin");
     }
 

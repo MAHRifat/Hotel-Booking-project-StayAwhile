@@ -39,4 +39,17 @@ async(req, res)=> {
     res.redirect("/listings");
 });
 
+// logout route
+
+router.get("/signout", async(req, res, next)=>{
+    req.logout((err) =>{
+        if(err){
+            return next(err);
+        }
+        
+        req.flash("warning", "Sign you out!");
+        res.redirect("/signin");
+    });
+});
+
 module.exports = router;
