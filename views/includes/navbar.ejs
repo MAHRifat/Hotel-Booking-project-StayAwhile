@@ -9,9 +9,15 @@
           <a class="nav-link" aria-current="page" href="/listings">Home</a>
           <a class="nav-link" href="/listings">All Listings</a>
           <a class="nav-link" href="/listings/new">Add new Listing</a>
-          <a class="nav-link" href="/signup">Signup</a>
-          <a class="nav-link" href="/signin">Signin</a>
-          <a class="nav-link" href="/signout">Signout</a>
+        </div>
+        <div class="navbar-nav ms-auto">
+          <% if(!currUser) { %>
+            <a class="nav-link" href="/signup">Signup</a>
+            <a class="nav-link" href="/signin">Signin</a>
+          <% } %>
+          <% if(currUser) { %>
+            <a class="nav-link" href="/signout">Signout</a>
+          <% } %>
         </div>
       </div>
     </div>
