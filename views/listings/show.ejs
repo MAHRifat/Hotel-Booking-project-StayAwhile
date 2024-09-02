@@ -10,10 +10,10 @@
                 <div class="card-body">
                 <p class="card-text">
                     <i>Owned by @<%= listing.owner.username %></i><br>
+                    <%= listing.description %> <br>
                     <%= listing.price.toLocaleString("en-IN") %>&#2547; / night <br>
                     <%= listing.location %> <br>
-                    <%= listing.country %> <br>
-                    <p class="card-text"><%= listing.description %></p> <br>
+                    <%= listing.country %>
                 </p>
                 </div>
             </div>
@@ -22,12 +22,15 @@
                     
     </div>
 
+    <% if(currUser && currUser._id.equals(listing.owner._id)) {%>
     <div class="btns mb-3">
-        <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark col-1 offset-3 edit-add-btn">Edit</a>
+        <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark col-2 offset-3 edit-add-btn">Edit</a>
         <form action="/listings/<%= listing._id %>?_method=DELETE" method="post">
             <button class="btn btn-dark offset-5">Delete</button>
         </form>
-    </div>   
+    </div>
+    <% } %>   
+
     <hr>
     <div class="col-8 offset-3 mb-3" >
         <h4>Leave a Review</h4>
