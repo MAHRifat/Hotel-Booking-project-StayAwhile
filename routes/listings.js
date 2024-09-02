@@ -36,11 +36,14 @@ router.get("/new",isLoggedIn, (req, res)=> {
 
 router.get("/:id",wrapAsync(async (req, res)=> {
     const {id} = req.params;
-    const listing =await Listing.findById(id).populate("reviews");
+    const listing =await Listing.findById(id)
+    .populate("reviews")
+    .populate("owner");
     if(!listing){
         req.flash("danger", "The listing you trying to visit not exist");
         res.redirect("/listings");
     }
+    console.log(listing);
     res.render("listings/show.ejs", {listing});
 }));
 
@@ -53,8 +56,9 @@ router.post("/", isLoggedIn, validateListing , wrapAsync( async (req, res,next)=
     // if(!newListing.title){
     //     throw new ExpressError(400,"Title missing");
     // }
-    req.flash("success", "New listing created");
+    newListing.owner = req.user._id;
     await newListing.save();
+    req.flash("success", "New listing created");
     res.redirect("/listings");
     
 }));
