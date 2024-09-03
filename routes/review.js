@@ -6,36 +6,19 @@ const Review = require("../models/review.js");
 const Listing = require("../models/listing.js");
 const {validateReview, isLoggedIn, isReviewAuthor} = require("../middleware.js");
 
+const reviewController = require("../controllers/review.js");
 // Review model 
 
 
 // review form
-router.post("/:id/reviews",isLoggedIn,validateReview, wrapAsync(async (req , res)=>{
-    const {id} = req.params;
-    let listing = await Listing.findById(id);
-    const newReview = new Review(req.body.review);
-    listing.reviews.push(newReview);
-    newReview.author = req.user;
-    await newReview.save();
-    await listing.save();
-    console.log("data saved");
-    req.flash("success", "New review created");
-    // res.send("saved");
-    res.redirect(`/listings/${id}`);
-}));
+router.post("/:id/reviews",isLoggedIn,validateReview, wrapAsync(reviewController.postReviewForm));
 
 // delete review
     // Mongo $pull operator
         // the $pull operator removes from an existing arry all instances of a value
         // or values that match a specified condition.
 
-router.delete("/:id/reviews/:reviewId",isLoggedIn,isReviewAuthor, wrapAsync(async(req, res)=>{
-    let {id, reviewId} = req.params;
-    await Listing.findByIdAndUpdate(id, {$pull: {reviews: reviewId}});
-    await Review.findByIdAndDelete(reviewId);
-    req.flash("warning", "Review deleted");
-    res.redirect(`/listings/${id}`);
-}));
+router.delete("/:id/reviews/:reviewId",isLoggedIn,isReviewAuthor, wrapAsync(reviewController.deleteReview));
 
 
 module.exports = router;

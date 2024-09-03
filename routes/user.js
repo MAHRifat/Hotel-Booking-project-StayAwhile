@@ -5,67 +5,30 @@ const User = require("../models/user.js");
 const passport = require("passport");
 const {saveRedirectUrl} = require("../middleware.js");
 
+const userController = require("../controllers/user.js");
 
 // signup User
 
-router.get("/signup",(req, res)=>{
-    res.render("registration/signup.ejs");
-});
+router.get("/signup", userController.renderSignup);
 
 // create user
-router.post("/signup", wrapAsync( async (req, res,next)=> {
-    try{
-        let {username, email, password} = req.body;
-        const newUser = new User({email, username});
-        const nUser = await User.register(newUser, password);
-       
-        // login after signup automatically
-       
-        req.login(nUser, (err) => {
-            if(err) {
-                next(err);
-            }
-        
-            req.flash("success","Welcome to StayAwhile");
-            res.redirect("/listings");
-        });
-    }catch(err){
-        req.flash("warning", err.message);
-        res.redirect("/signup");
-    }   
-}));
+router.post("/signup", wrapAsync(userController.createUser));
 
 // signin
 
-router.get("/signin",(req, res)=>{
-    res.render("registration/signin.ejs");
-});
+router.get("/signin", userController.renderSignin);
 
 
-router.post("/signin", saveRedirectUrl, passport.authenticate("local", {failureRedirect: "/signin", failureFlash: true}),
-async(req, res)=> {
-    req.flash("success","Welcome back to StayAwhile! you are successfully signin");
-    // if(res.locals.redirectUrl){
-    //     return res.redirect(res.locals.redirectUrl);
-    // }
-    
-    // res.redirect("/listings");
-
-    let redirectUrl = res.locals.redirectUrl || "listings";
-    res.redirect(redirectUrl);
-});
+router.post("/signin", saveRedirectUrl, 
+    passport.authenticate(
+        "local", {
+            failureRedirect: "/signin", 
+            failureFlash: true}
+        ),
+    userController.userSignin);
 
 // logout route
 
-router.get("/signout", async(req, res, next)=>{
-    req.logout((err) =>{
-        if(err){
-            return next(err);
-        }
-        
-        req.flash("warning", "Sign you out!");
-        res.redirect("/signin");
-    });
-});
+router.get("/signout", userController.userSignout);
 
 module.exports = router;
