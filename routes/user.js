@@ -7,25 +7,43 @@ const {saveRedirectUrl} = require("../middleware.js");
 
 const userController = require("../controllers/user.js");
 
-// signup User
+// router.route() use for the same path stay togather
 
-router.get("/signup", userController.renderSignup);
+router
+    .route("/signup")
+    .get(userController.renderSignup)
+    .post(wrapAsync(userController.createUser));
+
+// signup User
+// router.get("/signup", userController.renderSignup);
 
 // create user
-router.post("/signup", wrapAsync(userController.createUser));
+// router.post("/signup", wrapAsync(userController.createUser));
+
+
+
+router
+    .route("/signin")
+    .get(userController.renderSignin)
+    .post(saveRedirectUrl, 
+        passport.authenticate(
+            "local", {
+                failureRedirect: "/signin", 
+                failureFlash: true}
+            ),
+        userController.userSignin
+    );
 
 // signin
+// router.get("/signin", userController.renderSignin);
 
-router.get("/signin", userController.renderSignin);
-
-
-router.post("/signin", saveRedirectUrl, 
-    passport.authenticate(
-        "local", {
-            failureRedirect: "/signin", 
-            failureFlash: true}
-        ),
-    userController.userSignin);
+// router.post("/signin", saveRedirectUrl, 
+//     passport.authenticate(
+//         "local", {
+//             failureRedirect: "/signin", 
+//             failureFlash: true}
+//         ),
+//     userController.userSignin);
 
 // logout route
 
