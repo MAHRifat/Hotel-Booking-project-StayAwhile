@@ -26,7 +26,12 @@ router.get("/new",isLoggedIn, (req, res)=> {
 router.get("/:id",wrapAsync(async (req, res)=> {
     const {id} = req.params;
     const listing =await Listing.findById(id)
-    .populate("reviews")
+    .populate({
+        path: "reviews", 
+        populate: {
+            path: "author"
+        },
+    })
     .populate("owner");
     if(!listing){
         req.flash("danger", "The listing you trying to visit not exist");
