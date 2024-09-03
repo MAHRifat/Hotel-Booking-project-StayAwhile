@@ -32,7 +32,6 @@ router.get("/:id",wrapAsync(async (req, res)=> {
         req.flash("danger", "The listing you trying to visit not exist");
         res.redirect("/listings");
     }
-    console.log(listing);
     res.render("listings/show.ejs", {listing});
 }));
 
