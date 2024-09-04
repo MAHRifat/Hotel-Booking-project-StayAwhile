@@ -49,7 +49,13 @@ module.exports.isReviewAuthor = async (req, res , next) => {
 
 // validation middleware for create new route
 module.exports.validateListing = (req, res, next)=>{
-    let result = listingSchema.validate(req.body);
+    const dataToValidate = {
+        ...req.body,
+        image: req.file ? req.file.path : null, // Include file path if file exists
+    };
+
+    // Validate the combined data
+    let result = listingSchema.validate(dataToValidate);
     if(result.error){
         let erMsg = result.error.details.map((el)=> el.message).join(",");
         throw new ExpressError(400, erMsg);

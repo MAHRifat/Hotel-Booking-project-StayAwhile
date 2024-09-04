@@ -25,4 +25,8 @@ the website
     ii. npm i passport-local    -> use to authanticate using username and password
     iii. npm i passport-local-mongoose      -> if we use mongodb as database use this package
     
-
+15. npm i multer  -> Multer is a node.js middleware for handling multipart/form-data, which is primarily used for uploading files.
+16. use cloudinary as cloud 
+17. npm install dotenv --save   ->   Dotenv is a zero-dependency module that loads environment variables from a .env file into process.env. Storing configuration in the environment separate from code is based on The Twelve-Factor App methodology.
+18. npm i cloudinary 
+19. npm i multer-storage-cloudinary   -> Multer store cloudinary
