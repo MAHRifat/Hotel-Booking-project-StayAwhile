@@ -5,6 +5,11 @@ const ExpressError = require("../utils/ExpressError.js");
 const Listing = require("../models/listing.js");
 const {validateListing,isLoggedIn,isOwner} = require("../middleware.js");
 
+// Multer is a node.js middleware for handling multipart/form-data, which is primarily used for uploading files.
+// NOTE: Multer will not process any form which is not multipart (multipart/form-data).
+const multer  = require('multer')
+const upload = multer({ dest: 'uploads/' })
+
 const listingController = require("../controllers/listings.js");
 
 // router.route() apply for same path route
@@ -12,11 +17,14 @@ const listingController = require("../controllers/listings.js");
 router
     .route("/")
     .get(wrapAsync(listingController.index))
-    .post(
-        isLoggedIn, 
-        validateListing , 
-        wrapAsync(listingController.createListing)
-    );
+    // .post(
+    //     isLoggedIn, 
+    //     validateListing , 
+    //     wrapAsync(listingController.createListing)
+    // );
+    .post(upload.single('listing[image]'),(req, res) => {
+        res.send(req.file);
+    });
 
 // new route
 
