@@ -41,7 +41,7 @@ const sessionOptions = {
 };
 
 app.get("/", (req, res)=> {
-    res.send("Root direactory");
+    res.redirect("/listings");
 });
 
 
@@ -61,16 +61,6 @@ app.use((req, res, next)=>{
     res.locals.error = req.flash("error");
     res.locals.currUser = req.user;
     next();
-});
-
-app.get("/demouser",async (req, res)=>{
-    let fackUser = new User({
-        email: "fuck@gmail.com",
-        username: "fuck",
-    });
-
-    let newUser = await User.register(fackUser, "fucku");
-    res.send(newUser);
 });
 
 async function main() {
