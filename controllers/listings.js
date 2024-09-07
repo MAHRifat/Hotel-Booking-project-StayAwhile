@@ -1,7 +1,10 @@
 const Listing = require("../models/listing");
+const LocationCountry = require('../models/search');
 
 module.exports.index = async (req,res)=>{
-    const allListings = await Listing.find({});
+    const {category} = req.query;
+    const query = category ? {category} : {};
+    const allListings = await Listing.find(query);
     res.render("listings/index.ejs", {allListings});
 };
 
@@ -33,8 +36,18 @@ module.exports.createListing = async (req, res,next)=> {
     const newListing = new Listing(req.body.listing);
     newListing.owner = req.user._id;
     newListing.image = {url, filename};
-    console.log(newListing.image);
     await newListing.save();
+
+    // Check if location-country pair exists
+    const { location, country } = req.body.listing;
+    const existingPair = await LocationCountry.findOne({ location, country });
+
+    // If not, add the new location-country pair to the dropdown
+    if (!existingPair) {
+        const newLocationCountry = new LocationCountry({ location, country });
+        await newLocationCountry.save();
+    }
+
     req.flash("success", "New listing created");
     res.redirect("/listings");
     
@@ -73,4 +86,19 @@ module.exports.deleteListing = async (req, res)=> {
     await Listing.findByIdAndDelete(id);
     req.flash("warning", "Listing deleted");
     res.redirect("/listings");
+};
+
+
+module.exports.searchListings = async (req, res) => {
+    const { locationCountry } = req.query;
+    console.log(locationCountry);
+    const [location, country] = locationCountry.split('|'); // Split the location and country from the dropdown
+    // Search for listings based on location and country
+    const listings = await Listing.find({ location, country });
+    if (!listings || listings.length === 0) {
+        req.flash('error', 'No listings found for the selected location and country.');
+        return res.redirect('/listings');
+    }
+    // Render the search results
+    res.render('listings/searchResults', { listings });
 };

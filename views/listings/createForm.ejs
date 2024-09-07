@@ -23,6 +23,25 @@
                 </div>
             </div>
             <div class="mb-3">
+                <label for="category" class="form-label">Category</label>
+                <select name="listing[category]" id="category" class="form-control" required>
+                    <option value="">select one</option>
+                    <option value="camping">Camping</option>
+                    <option value="arctic">Arctic</option>
+                    <option value="amazing views">Amazing views</option>
+                    <option value="rooms">Rooms</option>
+                    <option value="desert">Desert</option>
+                    <option value="lake">Lake</option>
+                    <option value="tropical">Tropical</option>
+                    <option value="golfing">Golfing</option>
+                    <option value="trending">Trending</option>
+                    <option value="farms">Farms</option>
+                </select>
+                <div class="invalid-feedback">
+                    Please select one category!
+                </div>
+            </div>
+            <div class="mb-3">
                 <label for="image" class="form-label">Image</label>
                 <input type="file" id="image" name="listing[image]" class="form-control">
             </div>

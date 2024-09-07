@@ -16,6 +16,7 @@ const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
+const LocationCountry = require('./models/search');
 
 const listingRouter = require("./routes/listings.js");
 const reviewRouter = require("./routes/review.js");
@@ -60,6 +61,11 @@ app.use((req, res, next)=>{
     res.locals.danger = req.flash("danger");
     res.locals.error = req.flash("error");
     res.locals.currUser = req.user;
+    next();
+});
+// Middleware to make locationsCountries available to all views
+app.use(async (req, res, next) => {
+    res.locals.locationsCountries = await LocationCountry.find({}); // Fetch locations and countries
     next();
 });
 

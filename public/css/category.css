@@ -1,0 +1,66 @@
+#filters{
+    display: flex;
+    flex-wrap: nowrap; /* Prevent wrapping */
+    overflow-x: auto; /* Enable horizontal scrolling on smaller screens */
+    padding: 1rem 0; /* Optional: some padding for better spacing */
+    white-space: nowrap; 
+    scroll-behavior: smooth;
+    align-items: center;
+  }
+
+  .sec_nav{
+    display: flex;
+    align-items: center;
+  }
+
+  .tax-label{
+
+    font-size: .9rem;
+  }
+
+
+  .tax_toggle{
+    margin-left: 2rem;
+    padding: 1rem;
+    height: 4rem;
+    width: 25rem;
+    text-align: center;
+    font-size: .9rem;
+    border: 1px solid black;
+    border-radius: 1rem;
+    /* display: flex;
+    align-items: center; */
+  }
+
+  .tax-info{
+    display: none;
+  }
+
+  .filter{
+    text-align: center;
+    margin-right: 2rem;
+    margin-top: 1rem;
+    opacity: .7;
+    flex: 0 0 auto;
+    font-size: .9rem;
+  }
+
+  .filter:hover{
+    opacity: 1;
+    cursor: pointer;
+  }
+
+  #filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar on all other browsers */
+  #filters {
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .active {
+    font-weight: bold;
+    text-decoration: underline;
+  }

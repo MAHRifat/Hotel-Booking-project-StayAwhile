@@ -121,3 +121,28 @@ body{
     padding-left: 0;
     padding-right: 0;
 }
+
+.search-btn{
+    color: white !important;
+    background-color: #fe424d !important;
+    opacity: .9;
+    border-radius: 25px !important;
+    padding: 0 1rem 0 1rem !important;
+    font-size: .9rem !important;
+}
+
+.search-btn:hover{
+    opacity: 1;
+}
+
+.search-btn i{
+    display: inline;
+    margin-right: .5rem;
+}
+
+.search-inp{
+    border-radius: 25px !important;
+    padding: .5rem 2rem .5rem 2rem !important;
+    font-size: .9rem !important;
+    margin-right: .3rem;
+}

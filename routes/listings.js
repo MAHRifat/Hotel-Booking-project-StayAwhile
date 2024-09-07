@@ -28,6 +28,7 @@ router
 // new route
 
 router.get("/new",isLoggedIn, listingController.renderNewForm);
+router.get('/search', listingController.searchListings);
 
 router
     .route("/:id")
@@ -53,6 +54,9 @@ router.get("/:id/edit",
     isOwner, 
     wrapAsync(listingController.editListing)
 );
+
+// router.get('/searchForm', listingController.renderSearchForm);
+
 
 
 

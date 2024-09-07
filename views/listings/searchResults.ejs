@@ -1,0 +1,82 @@
+<% layout("/layouts/boilerplate.ejs") %>
+
+<span class="d-flex justify-content-between sec_nav">
+    <div id="filters" class="filters-container d-flex justify-content-between">
+      <div class="filter" data-category="">
+        <div><i class="fa-solid fa-border-all"></i></div>
+        <p>All</p>
+      </div>
+      <div class="filter" data-category="camping">
+        <div><i class="fa-solid fa-fire-flame-curved"></i></div>
+        <p>Camping</p>
+      </div>
+      <div class="filter " data-category="arctic">
+        <div><i class="fa-brands fa-galactic-republic"></i></div>
+        <p>Arctic</p>
+      </div>
+      <div class="filter " data-category="amazing views">
+        <div><i class="fa-solid fa-panorama"></i></div>
+        <p>Amazing views</p>
+      </div>
+      <div class="filter " data-category="rooms">
+        <div><i class="fa-solid fa-bed"></i></div>
+        <p>Rooms</p>
+      </div>
+      <div class="filter " data-category="desert">
+        <div><i class="fa-solid fa-stroopwafel"></i></div>
+        <p>Desert</p>
+      </div>
+      <div class="filter " data-category="lake">
+        <div><i class="fa-solid fa-water"></i></div>
+        <p>Lake</p>
+      </div>
+      <div class="filter " data-category="tropical">
+        <div><i class="fa-solid fa-hurricane"></i></div>
+        <p>Tropical</p>
+      </div>
+      <div class="filter ">
+        <div><i class="fa-solid fa-golf-ball-tee"></i></div>
+        <p>Golfing</p>
+      </div>
+      <div class="filter " data-category="trending">
+        <div><i class="fa-solid fa-hourglass-half"></i></div>
+        <p>Trending</p>
+      </div>
+      <div class="filter " data-category="farms">
+        <div><i class="fa-solid fa-tractor"></i></div>
+        <p>Farms</p>
+      </div>
+
+    </div>
+    <div class="tax_toggle">
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+        <label class="form-check-label tax-label" for="flexSwitchCheckDefault">Display total after taxes</label>
+      </div>
+    </div>
+  </span>
+
+
+  <h2>Search Results</h2>
+
+  <div class="row row-cols-xxl-5 row-cols-xl-3 row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3">
+      <% if (listings.length > 0) { %>
+          <% listings.forEach(listing => { %>
+              <a href="/listings/<%= listing._id %>" class="listing-link">
+                  <div class="card listing-card"> 
+                      <img src="<%= listing.image.url %>" class="card-img-top" alt="..." style="height: 20rem;">
+                      <div class="card-img-overlay"></div>
+                      <div class="card-body">
+                        <p class="card-text">
+                          <b><%= listing.title %></b> <br>
+                          <%= listing.price.toLocaleString("en-IN") %>&#2547; / night
+                          <i class="tax-info">+ 18% GST</i>
+                        </p>  
+                      </div>
+                  </div>
+              </a>
+          <% }) %>
+      <% } else { %>
+          <p>No listings found for the selected location and country.</p>
+      <% } %>
+  </div>
