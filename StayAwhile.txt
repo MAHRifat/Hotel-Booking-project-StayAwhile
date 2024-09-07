@@ -30,3 +30,5 @@ the website
 17. npm install dotenv --save   ->   Dotenv is a zero-dependency module that loads environment variables from a .env file into process.env. Storing configuration in the environment separate from code is based on The Twelve-Factor App methodology.
 18. npm i cloudinary 
 19. npm i multer-storage-cloudinary   -> Multer store cloudinary
+20. mongo atlas     -> use for deploy my project  -> cloud database service . Deploy a multi-cloud database.
+21. we must update mongodb, mongoose 
