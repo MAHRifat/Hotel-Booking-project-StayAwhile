@@ -12,6 +12,7 @@ const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const ExpressError = require("./utils/ExpressError.js");
 const session = require("express-session");
+const MongoStore = require('connect-mongo');
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
@@ -22,6 +23,19 @@ const listingRouter = require("./routes/listings.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 
+const dbUrl = process.env.ATLASDB_URL;
+
+async function main() {
+  await mongoose.connect(dbUrl, {
+  });
+}
+
+main().then(() => {
+  console.log("connected to DB");
+}).catch((err) => {
+  console.error("Connection error:", err);
+});
+
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({extended: true}));
@@ -30,7 +44,21 @@ app.engine('ejs', ejsMate);
 app.use(express.static(path.join(__dirname,"/public")));
 
 
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    crypto: {
+        secret: "mysupersecretcode",
+    },
+    touchAfter: 24 * 3600,
+});
+
+store.on("error", ()=> {
+    console.log("Error in Mongo session store", err);
+});
+
+
 const sessionOptions = {
+    store,
     secret: "mysupersecretcode",
     resave: false,
     saveUninitialized: true,
@@ -84,18 +112,7 @@ app.use(async (req, res, next) => {
 //     console.log(err);
 // });
 
-const dbUrl = process.env.ATLASDB_URL;
 
-async function main() {
-  await mongoose.connect(dbUrl, {
-  });
-}
-
-main().then(() => {
-  console.log("connected to DB");
-}).catch((err) => {
-  console.error("Connection error:", err);
-});
 
 
 app.use("/listings", listingRouter);
